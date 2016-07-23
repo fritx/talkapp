@@ -1,0 +1,27 @@
+<h1>Talk App</h1>
+
+<form onsubmit="formSubmit(event)">
+  <input type="text" name="username" placeholder="Username.." autofocus>
+  <input type="password" name="password" placeholder="Password..">
+  <button>Login</button>
+</form>
+
+<script>
+/* global renderer */
+const { formDataObj } = renderer.util
+const { ipc } = renderer
+
+// events
+ipc.on('user-login-failed', () => {
+  alert('Login failed.')
+})
+
+function userLogin (data) {
+  ipc.send('user-login', data)
+}
+
+function formSubmit (e) {
+  e.preventDefault()
+  userLogin(formDataObj(e.target))
+}
+</script>

@@ -1,0 +1,14 @@
+<h1>Welcome to Talk World</h1>
+
+<p>This is home page</p>
+
+<button onclick="userLogout()">Logout</button>
+
+<script>
+/* global renderer */
+const { ipc } = renderer
+
+function userLogout () {
+  ipc.send('user-logout')
+}
+</script>
