@@ -2,19 +2,31 @@ const { app, Menu, ipcMain, BrowserWindow } = require('electron')
 const {
   close, closeAll, openAlert, openConfirm, openLogin, openHome
 } = require('./desktop')
+const { createTray } = require('./tray')
+const hub = require('./hub')
 let currUser
 
 const noop = () => {}
 app.on('will-quit', noop)
 app.on('window-all-closed', () => {
-  if (!currUser) app.quit()
+  if (!currUser) hub.emit('app-quit')
 })
 app.on('ready', () => {
   Menu.setApplicationMenu(null) // disable menu
+  createTray()
   openLogin()
 })
 
-// events
+// hub events
+hub.on('app-show', () => {
+  if (currUser) openHome()
+  else openLogin()
+})
+hub.on('app-quit', () => {
+  app.quit()
+})
+
+// ipcMain events
 // todo: broadcast
 // todo: ipc emit
 ipcMain.on('user-login', (e, data) => {
