@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron')
+const { ipcMain, BrowserWindow } = require('electron')
 const { join } = require('path')
 const preload = join(__dirname, `../renderer/index.js`)
 const wins = {}
@@ -24,6 +24,31 @@ function openLogin () {
 }
 exports.openLogin = openLogin
 
+// @private
+const confirmMap = {}
+ipcMain.on('win-confirm', (e, answer) => {
+  const win = BrowserWindow.fromWebContents(e.sender)
+  const rs = confirmMap[win.id]
+  if (rs) rs(answer)
+  win.close()
+})
+
+// @public
+function openConfirm (data) {
+  const win = openWindow('confirm', {
+    width: 300,
+    height: 150,
+    frame: false,
+    show: false // dont show
+  })
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('init-data', data)
+  })
+  return new Promise(rs => {
+    confirmMap[win.id] = rs // wait for call
+  })
+}
+exports.openConfirm = openConfirm
 
 // @public
 function openAlert (data) {

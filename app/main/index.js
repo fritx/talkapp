@@ -1,6 +1,6 @@
 const { app, Menu, ipcMain, BrowserWindow } = require('electron')
 const {
-  close, closeAll, openAlert, openLogin, openHome
+  close, closeAll, openAlert, openConfirm, openLogin, openHome
 } = require('./desktop')
 let currUser
 
@@ -32,11 +32,19 @@ ipcMain.on('user-login', (e, data) => {
   }
 })
 ipcMain.on('user-logout', () => {
-  closeAll()
-  setImmediate(() => {
-    currUser = null // after closeAll
-    openLogin()
+  openConfirm({
+    title: 'Logout',
+    content: 'Are you sure to log out?'
+  }).then(answer => {
+    if (answer) logout()
   })
+  function logout () {
+    closeAll()
+    setImmediate(() => {
+      currUser = null // after closeAll
+      openLogin()
+    })
+  }
 })
 ipcMain.on('win-show', e => {
   const win = BrowserWindow.fromWebContents(e.sender)
