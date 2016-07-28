@@ -18,11 +18,26 @@ exports.openHome = openHome
 // @public
 function openLogin () {
   openWindow('login', {
-    width: 300,
+    width: 250,
     height: 400
   })
 }
 exports.openLogin = openLogin
+
+
+// @public
+function openAlert (data) {
+  const win = openWindow('alert', {
+    width: 300,
+    height: 150,
+    frame: false,
+    show: false // dont show
+  })
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('init-data', data)
+  })
+}
+exports.openAlert = openAlert
 
 // @public
 function closeAll () {
@@ -39,7 +54,8 @@ function close (key) {
 exports.close = close
 
 // @private
-function openWindow (key, opts) {
+function openWindow (key, opts = {}) {
+  const dontShow = opts.show === false
   opts = Object.assign({
     show: false,
     resizable: false
@@ -53,11 +69,12 @@ function openWindow (key, opts) {
   win.loadURL(fileURL(key))
   // win.webContents.on('did-finish-load', () => {
   win.on('ready-to-show', () => { // >= 1.2.3
-    win.show()
+    if (!dontShow) win.show()
   })
   win.on('closed', () => {
     delete wins[key]
   })
+  return win
 }
 function fileURL (key) {
   const path = join(__dirname, `../window/${key}.html`)

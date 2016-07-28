@@ -1,5 +1,7 @@
-const { app, Menu, ipcMain } = require('electron')
-const { close, closeAll, openLogin, openHome } = require('./desktop')
+const { app, Menu, ipcMain, BrowserWindow } = require('electron')
+const {
+  close, closeAll, openAlert, openLogin, openHome
+} = require('./desktop')
 let currUser
 
 const noop = () => {}
@@ -22,7 +24,11 @@ ipcMain.on('user-login', (e, data) => {
     openHome()
   }
   else {
-    e.sender.send('user-login-failed')
+    // e.sender.send('user-login-failed')
+    openAlert({
+      title: 'Login Failed',
+      content: 'Username or password incorrect.'
+    })
   }
 })
 ipcMain.on('user-logout', () => {
@@ -31,4 +37,12 @@ ipcMain.on('user-logout', () => {
     currUser = null // after closeAll
     openLogin()
   })
+})
+ipcMain.on('win-show', e => {
+  const win = BrowserWindow.fromWebContents(e.sender)
+  win.show()
+})
+ipcMain.on('win-close', e => {
+  const win = BrowserWindow.fromWebContents(e.sender)
+  win.close()
 })

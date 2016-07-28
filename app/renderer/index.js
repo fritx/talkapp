@@ -9,3 +9,8 @@ global.renderer = {
   ipc: ipcRenderer,
   util
 }
+
+// shortcuts
+// @public
+global.$ = document.querySelector.bind(document)
+global.$$ = document.querySelectorAll.bind(document)
