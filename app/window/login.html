@@ -1,15 +1,19 @@
 <h1>Talk App</h1>
 
 <form onsubmit="formSubmit(event)">
-  <input type="text" name="username" placeholder="Username.." autofocus>
+  <input type="text" name="username" placeholder="Username.." value="admin">
+  <br>
   <input type="password" name="password" placeholder="Password..">
-  <button>Login</button>
+  <br>
+  <button type="submit">Login</button>
 </form>
 
 <script>
 /* global renderer */
-const { formDataObj } = renderer.util
+const { focusEnd, formDataObj } = renderer.util
 const { ipc } = renderer
+
+focusEnd($('input'))
 
 // events
 ipc.on('user-login-failed', () => {

@@ -10,3 +10,11 @@ function formDataObj (form) {
   return dataObj
 }
 exports.formDataObj = formDataObj
+
+// @public
+function focusEnd (input) {
+  const { length } = input.value
+  input.setSelectionRange(length, length)
+  input.focus()
+}
+exports.focusEnd = focusEnd
