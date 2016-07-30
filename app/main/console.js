@@ -8,7 +8,11 @@ process.on('uncaughtException', err => {
 })
 
 hub.on('main-error', err => {
-  logger.error('process.uncaught', err)
+  // console.error is called by electron before ready
+  // however, is not called after ready
+  if (hub.appReady) {
+    hub.emit('main-console', 'error', ['process.uncaught', err])
+  }
 })
 hub.on('win-console', (key, args) => {
   prev[key](...args)

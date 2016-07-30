@@ -18,6 +18,7 @@ app.on('window-all-closed', () => {
   if (!currUser) hub.emit('app-quit')
 })
 app.on('ready', () => {
+  hub.appReady = true
   Menu.setApplicationMenu(null) // disable menu
   createTray()
   openLogin()
