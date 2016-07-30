@@ -1,7 +1,9 @@
 {
   "name": "talkapp-app",
+  "productName": "TalkApp",
   "main": "./main",
   "dependencies": {
-    "electron-dl": "^1.3.0"
+    "electron-dl": "^1.3.0",
+    "fs-extra": "^0.30.0"
   }
 }
