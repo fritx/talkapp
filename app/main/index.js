@@ -1,3 +1,4 @@
+require('./console')
 require('./contextMenu')()
 if (process.env.DEBUG) {
   require('electron-debug')()

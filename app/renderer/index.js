@@ -1,3 +1,4 @@
+require('./console')
 const { webFrame, ipcRenderer } = require('electron')
 const util = require('./util')
 
