@@ -1,13 +1,14 @@
 ## Features
 
 - [x] Zero unnecessary callbacks
+- [x] 100% error capture (process/window)
 - [x] Console-based log system
 - [x] Fully event-driven
 - [x] The electron way
 
 ## Rules
 
-- exposed electron-is-dev is not trusted
+- Exposed electron-is-dev is not trusted
 - process.env.DEBUG should be envify'd
 - Prefer promises over callbacks
 - console.* should be persisted as logger

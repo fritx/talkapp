@@ -15,14 +15,25 @@ for (const key in prev) {
       // cast error obj before ipc sending
       // todo: logic move to global.ipc.send
       args.forEach((v, i) => {
-        if (isError(v)) {
-          const { name, message, stack } = v
-          const obj = { name, message, stack }
-          args[i] = obj // replace
-        }
+        args[i] = toObj(v) // replace
       })
 
       ipcRenderer.send('win-console', key, args)
     }
   }
+}
+
+window.addEventListener('error', e => {
+  ipcRenderer.send('win-error', toObj(e.error))
+})
+
+function toObj (v) {
+  if (isError(v)) {
+    const obj = {}
+    ;['name', 'message', 'stack'].forEach(k => {
+      obj[k] = v[k]
+    })
+    return obj
+  }
+  return v
 }
