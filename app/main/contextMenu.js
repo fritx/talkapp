@@ -39,7 +39,10 @@ function create(win, opts) {
       }, {
         label: 'Save Image',
         click(item, win) {
-          download(win, props.srcURL);
+          // download(win, props.srcURL);
+          download(win, props.srcURL, { // xxx
+            saveAs: true
+          });
         }
       }, {
         type: 'separator'

@@ -1,3 +1,5 @@
+require('./contextMenu')()
+
 const { app, Menu, ipcMain, BrowserWindow } = require('electron')
 const {
   close, closeAll, openAlert, openConfirm, openLogin, openHome
