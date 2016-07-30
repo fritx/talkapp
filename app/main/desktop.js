@@ -17,9 +17,24 @@ exports.openHome = openHome
 
 // @public
 function openLogin () {
-  openWindow('login', {
+  const win = openWindow('login', {
+    show: false, // dont show
     width: 250,
     height: 400
+  })
+  Promise.all([ // parallel
+    new Promise(rs => {
+      rs({ // todo: load config
+        username: 'admin233',
+        remember: true,
+        auto: false
+      })
+    }),
+    new Promise(rs => {
+      win.webContents.on('did-finish-load', rs)
+    })
+  ]).then(arr => {
+    win.webContents.send('init-data', arr[0])
   })
 }
 exports.openLogin = openLogin

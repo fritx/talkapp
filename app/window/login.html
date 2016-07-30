@@ -1,26 +1,40 @@
+<style>
+  label { -webkit-user-select: none; }
+</style>
+
 <h1>Talk App</h1>
 
 <img src="../media/caprine/IconTray.png">
 
 <form onsubmit="formSubmit(event)">
-  <input type="text" name="username" placeholder="Username.." value="admin">
+  <input type="text" name="username" placeholder="Username..">
   <br>
   <input type="password" name="password" placeholder="Password..">
+  <br>
+  <label>
+    <input type="checkbox" name="remember">
+    <span>Remember</span>
+  </label>
+  <label>
+    <input type="checkbox" name="auto">
+    <span>Auto</span>
+  </label>
   <br>
   <button type="submit">Login</button>
 </form>
 
 <script>
 /* global renderer */
-const { focusEnd, formDataObj } = renderer.util
+const { focusEnd, fillForm, formDataObj } = renderer.util
 const { ipc } = renderer
+const form = $('form')
+
+ipc.on('init-data', (e, data) => {
+  fillForm(form, data)
+  ipc.send('win-show')
+})
 
 focusEnd($('input'))
-
-// events
-ipc.on('user-login-failed', () => {
-  alert('Login failed.')
-})
 
 function userLogin (data) {
   ipc.send('user-login', data)

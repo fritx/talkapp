@@ -1,4 +1,9 @@
-// @public
+module.exports = {
+  formDataObj,
+  fillForm,
+  focusEnd,
+}
+
 function formDataObj (form) {
   const dataObj = {}
   const formData = new FormData(form)
@@ -9,12 +14,38 @@ function formDataObj (form) {
   }
   return dataObj
 }
-exports.formDataObj = formDataObj
 
-// @public
+// todo: array values at other tags
+// todo: select[multiple]
+function fillForm (form, data) {
+  for (const key in data) {
+    const value = data[key]
+    const qk = `[name="${key}"]`
+    const qkv = `[name="${key}"][value="${value}"]`
+    const el = formQuery(form, qk)
+    switch (el.tagName) {
+      case 'TEXTAREA':
+        el.textContent = value
+        continue
+    }
+    switch (el.type) { // tagName=input
+      case 'checkbox':
+        el.checked = value
+        continue
+      case 'radio':
+        formQuery(form, qkv).checked = true
+        continue
+      default: // type=text
+        el.value = value
+    }
+  }
+}
+function formQuery (form, selector) {
+  return form.querySelector(selector)
+}
+
 function focusEnd (input) {
   const { length } = input.value
   input.setSelectionRange(length, length)
   input.focus()
 }
-exports.focusEnd = focusEnd
