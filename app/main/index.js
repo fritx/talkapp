@@ -1,4 +1,7 @@
 require('./contextMenu')()
+if (process.env.DEBUG) {
+  require('electron-debug')()
+}
 
 const { app, Menu, ipcMain, BrowserWindow } = require('electron')
 const {

@@ -14,3 +14,9 @@ global.renderer = {
 // @public
 global.$ = document.querySelector.bind(document)
 global.$$ = document.querySelectorAll.bind(document)
+
+// for devtron
+// https://github.com/electron/devtron#disabled-node-integration
+if (process.env.DEBUG) {
+  window.__devtron = {require: require, process: process}
+}

@@ -2,7 +2,14 @@
 'use strict';
 const electron = require('electron');
 const {download} = require('electron-dl');
-const isDev = require('electron-is-dev');
+// const isDev = require('electron-is-dev');
+let isDev = false
+if (process.env.DEBUG) { // xxx
+  isDev = true
+}
+
+// todo: should try to disable devtools
+// in production mode
 
 function create(win, opts) {
   win.webContents.on('context-menu', (e, props) => {
