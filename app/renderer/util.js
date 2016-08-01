@@ -4,13 +4,22 @@ module.exports = {
   focusEnd,
 }
 
+// formData doesn't take in "empty" (checkbox) fields
 function formDataObj (form) {
   const dataObj = {}
+  const els = form.querySelectorAll('[name]')
   const formData = new FormData(form)
-  for (const k of formData.keys()) {
-    const arr = formData.getAll(k)
-    dataObj[k] = arr.length > 1
-      ? arr : arr[0]
+  // for (const k of formData.keys()) {
+  for (const el of els) {
+    const k = el.name
+    if (formData.has(k)) {
+      const arr = formData.getAll(k)
+      dataObj[k] = arr.length > 1
+        ? arr : arr[0]
+    }
+    else {
+      dataObj[k] = ''
+    }
   }
   return dataObj
 }

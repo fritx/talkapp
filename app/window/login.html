@@ -12,11 +12,11 @@
   <input type="password" name="password" placeholder="Password..">
   <br>
   <label>
-    <input type="checkbox" name="remember">
+    <input type="checkbox" name="remember" onchange="checkChange(event)">
     <span>Remember</span>
   </label>
   <label>
-    <input type="checkbox" name="auto">
+    <input type="checkbox" name="auto" onchange="checkChange(event)">
     <span>Auto</span>
   </label>
   <br>
@@ -42,6 +42,19 @@ function userLogin (data) {
 
 function formSubmit (e) {
   e.preventDefault()
-  userLogin(formDataObj(e.target))
+  userLogin(formDataObj(form))
+}
+
+// formChange doesn't have an event argument
+// function formChange () {
+function checkChange (e) {
+  const { name } = e.target
+  let { remember, auto } = formDataObj(form)
+  if (name === 'auto' && auto) {
+    fillForm(form, { remember: 'on' })
+  }
+  else if (name === 'remember' && !remember) {
+    fillForm(form, { auto: '' })
+  }
 }
 </script>
