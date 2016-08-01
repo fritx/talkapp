@@ -9,6 +9,7 @@ const {
   close, closeAll, openAlert, openConfirm, openLogin, openHome
 } = require('./desktop')
 const { createTray } = require('./tray')
+const { userConf } = require('./config')
 const hub = require('./hub')
 let currUser
 
@@ -37,10 +38,19 @@ hub.on('app-quit', () => {
 // todo: broadcast
 // todo: ipc emit
 ipcMain.on('user-login', (e, data) => {
+  const { username } = data
   if (data.username === 'admin') { // success
-    currUser = data.username
+    currUser = username
     close('login')
     openHome()
+
+    const { remember, auto } = data
+    userConf.setv({
+      'login.username': username,
+      'login.remember': remember,
+      'login.auto': auto,
+    })
+    userConf.save()
   }
   else {
     // e.sender.send('user-login-failed')

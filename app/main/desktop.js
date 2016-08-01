@@ -1,5 +1,6 @@
 const { ipcMain, BrowserWindow } = require('electron')
 const { join } = require('path')
+const { userConf } = require('./config')
 const preload = join(__dirname, `../renderer/index.js`)
 const wins = {}
 
@@ -23,19 +24,17 @@ function openLogin () {
     height: 400
   })
   Promise.all([ // parallel
-    new Promise(rs => {
-      rs({ // todo: load config
-        username: 'admin233',
-        remember: true,
-        auto: false
-      })
+    userConf.load().then(() => {
+      return userConf.getv('login')
     }),
     new Promise(rs => {
       win.webContents.on('did-finish-load', rs)
     })
-  ]).then(arr => {
+  ])
+  .then(arr => {
     win.webContents.send('init-data', arr[0])
   })
+  .catch(console.error) // catch
 }
 exports.openLogin = openLogin
 
