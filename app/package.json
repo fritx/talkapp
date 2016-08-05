@@ -6,6 +6,7 @@
     "dot-prop": "^3.0.0",
     "electron-dl": "^1.3.0",
     "fs-extra": "^0.30.0",
-    "fs-extra-promise": "^0.4.0"
+    "fs-extra-promise": "^0.4.0",
+    "socket.io-client": "^1.4.8"
   }
 }

@@ -10,6 +10,7 @@ const {
 } = require('./desktop')
 const { createTray } = require('./tray')
 const { userConf } = require('./config')
+const { userLogin } = require('./api')
 const hub = require('./hub')
 let currUser
 
@@ -34,31 +35,36 @@ hub.on('app-quit', () => {
   app.quit()
 })
 
+hub.on('user-login-success', data => {
+  const { username } = data
+  currUser = username
+  close('login')
+  openHome()
+
+  const { remember, auto } = data
+  userConf.setv({
+    'login.username': username,
+    'login.remember': remember,
+    'login.auto': auto,
+  })
+  userConf.save()
+})
+hub.on('user-login-failed', err => {
+  openAlert({
+    title: 'Login Failed',
+    content: err.message
+  })
+})
+
 // ipcMain events
 // todo: broadcast
-// todo: ipc emit
 ipcMain.on('user-login', (e, data) => {
-  const { username } = data
-  if (data.username === 'admin') { // success
-    currUser = username
-    close('login')
-    openHome()
-
-    const { remember, auto } = data
-    userConf.setv({
-      'login.username': username,
-      'login.remember': remember,
-      'login.auto': auto,
+  userLogin(data)
+    .then(() => {
+      hub.emit('user-login-success', data)
+    }, err => {
+      hub.emit('user-login-failed', err)
     })
-    userConf.save()
-  }
-  else {
-    // e.sender.send('user-login-failed')
-    openAlert({
-      title: 'Login Failed',
-      content: 'Username or password incorrect.'
-    })
-  }
 })
 ipcMain.on('user-logout', () => {
   openConfirm({
